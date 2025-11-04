@@ -9,7 +9,13 @@ dotenv.config();
 const app = express(); //creo una isntancia de express
 
 // Middlewares globales
-app.use(cors());  //permite que el servidor reciba solicitudes de otros orígenes.
+app.use(cors({
+  origin: [
+    "http://localhost:3001",  // para desarrollo local
+    "https://consignataria-front.onrender.com" // dominio del front en Render
+  ],
+  credentials: true
+})); //permite que el servidor reciba solicitudes de otros orígenes.
 app.use(express.json()); //transforma una peticion entrante JSON en un objeto JS accesible
 app.use(cookieParser()); //permite leer y trabajar con las cookies
 
