@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     // === 1) KPIs principales ===
-    const kpiRes = await fetch("http://localhost:3001/api/dashboard/kpis");
+    const kpiRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/kpis");
     const kpis = await kpiRes.json();
 
     const meses = [
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if ($pagPen) $pagPen.textContent = kpis.totalCargasAnual ?? 0;
 
     // === 2) Gráfico: Ganancias Mensuales ===
-    const gananciasRes = await fetch("http://localhost:3001/api/dashboard/ganancias-mensuales");
+    const gananciasRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/ganancias-mensuales");
     const ganancias = await gananciasRes.json();
     const $cvGan = document.getElementById("graficoGanancias");
 
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // === 3) Gráfico: Cargas Mensuales ===
-    const cargasRes = await fetch("http://localhost:3001/api/dashboard/cargas-mensuales");
+    const cargasRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/cargas-mensuales");
     const cargas = await cargasRes.json();
     const $cvCar = document.getElementById("graficoCargasMensuales");
 
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // === 4) Gráfico: Tipos de Carga ===
-    const tiposRes = await fetch("http://localhost:3001/api/dashboard/distribucion-tipos");
+    const tiposRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/distribucion-tipos");
     const tipos = await tiposRes.json();
     const ctxTipos = document.getElementById("graficoTipos");
     const datosTipos = [tipos.gordos ?? 0, tipos.invernada ?? 0];
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // === 5) Lista de vencimientos próximos ===
-    const vencimientosRes = await fetch("http://localhost:3001/api/dashboard/vencimientos");
+    const vencimientosRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/vencimientos");
     const vencimientos = await vencimientosRes.json();
     const lista = document.getElementById("listaVencimientos");
 
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function verificarVencimientosPendientes() {
       try {
-        const resp = await fetch("http://localhost:3001/api/dashboard/vencimientos-vencidos");
+        const resp = await fetch("https://consignataria-api.onrender.com/api/dashboard/vencimientos-vencidos");
         const data = await resp.json();
         const cantidad = data.vencidos_sin_pagar || 0;
 
@@ -307,7 +307,7 @@ document.head.appendChild(style);
 
     // === 6) Gráfico de Rindes ===
     try {
-      const topRindesRes = await fetch("http://localhost:3001/api/dashboard/topRindes");
+      const topRindesRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/topRindes");
       const topRindes = await topRindesRes.json();
 
       if (Array.isArray(topRindes) && topRindes.length > 0) {
@@ -382,7 +382,7 @@ document.head.appendChild(style);
       async function poblarAniosSelect() {
         if (!$yearA || !$yearB) return;
 
-        const res = await fetch("http://localhost:3001/api/dashboard/anios", { cache: "no-store" });
+        const res = await fetch("https://consignataria-api.onrender.com/api/dashboard/anios", { cache: "no-store" });
         if (!res.ok) throw new Error("No se pudieron obtener los años disponibles");
         const { years } = await res.json(); // ej: [2025, 2024, 2023]
 
@@ -409,7 +409,7 @@ document.head.appendChild(style);
       }
 
       async function fetchGananciasPorAnio(year) {
-        const res = await fetch(`http://localhost:3001/api/dashboard/ganancias-mensuales?year=${year}`);
+        const res = await fetch(`https://consignataria-api.onrender.com/api/dashboard/ganancias-mensuales?year=${year}`);
         if (!res.ok) throw new Error("No se pudo obtener ganancias para " + year);
         return res.json(); // { meses: [...], valores: [...] }
       }
@@ -532,7 +532,7 @@ document.head.appendChild(style);
 
     async function poblarAniosSelectCargas() {
       if (!$yearA_c || !$yearB_c) return;
-      const res = await fetch("http://localhost:3001/api/dashboard/anios", { cache: "no-store" });
+      const res = await fetch("https://consignataria-api.onrender.com/api/dashboard/anios", { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudieron obtener los años disponibles");
       const { years } = await res.json();
 
@@ -558,7 +558,7 @@ document.head.appendChild(style);
     }
 
     async function fetchCargasPorAnio(year) {
-      const url = `http://localhost:3001/api/dashboard/cargas-mensuales?year=${encodeURIComponent(year)}`;
+      const url = `https://consignataria-api.onrender.com/api/dashboard/cargas-mensuales?year=${encodeURIComponent(year)}`;
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudo obtener cargas para " + year);
       return res.json(); // { year, meses:[...], valores:[...] }
@@ -681,7 +681,7 @@ if (modalVencEl) {
       console.log("🔁 Actualizando Dashboard tras cerrar el modal de vencimientos...");
 
       // Refrescar KPIs
-      const kpiRes = await fetch("http://localhost:3001/api/dashboard/kpis");
+      const kpiRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/kpis");
       const kpis = await kpiRes.json();
       document.getElementById("gananciaMensual").textContent = `$ ${(+kpis.gananciaMensual || 0).toLocaleString("es-AR")}`;
       document.getElementById("gananciaAnual").textContent = `$ ${(+kpis.gananciaAnual || 0).toLocaleString("es-AR")}`;
@@ -689,7 +689,7 @@ if (modalVencEl) {
       document.getElementById("pagosPendientes").textContent = kpis.totalCargasAnual ?? 0;
 
       // Refrescar lista de vencimientos
-      const vencRes = await fetch("http://localhost:3001/api/dashboard/vencimientos");
+      const vencRes = await fetch("https://consignataria-api.onrender.com/api/dashboard/vencimientos");
       const vencimientos = await vencRes.json();
       const lista = document.getElementById("listaVencimientos");
       if (lista) {
