@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
             res.cookie("token", token, {
                 httpOnly: true,  //evita q la cookie sea leida con javascript
                 secure: process.env.NODE_ENV === "production",  //aca solo viaja por HTTPS
-                sameSite: "Strict" //otra capa de seguridad
+                sameSite: "None" //otra capa de seguridad
             });
             return res.send("Login Correcto");
         }
