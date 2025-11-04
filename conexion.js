@@ -1,25 +1,29 @@
-//Llamar al componente de mysql
+// conexion.js
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 dotenv.config();
 
+let dbConfig = {};
 
-//Establecer los parámetros de la conexión
-const conexion = mysql.createConnection({
+if (process.env.MYSQL_URL) {
+  // 🔹 Modo Railway (Private Network)
+  dbConfig = process.env.MYSQL_URL;
+} else {
+  // 🔹 Modo local (localhost)
+  dbConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 3306,
-    ssl: false
+    port: process.env.DB_PORT || 3306
+  };
+}
+
+const conexion = mysql.createConnection(dbConfig);
+
+conexion.connect((error) => {
+  if (error) throw error;
+  console.log('✅ Conectado a la base de datos');
 });
 
- 
-//Nos conectamos con la base
-conexion.connect(function (error) {
-    if (error) throw error;
-    console.log('Conectado a la base de datos');
-});
-
-//Exportamos el objeto con los datos de la conexión
 module.exports = { conexion };
