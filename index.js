@@ -22,8 +22,10 @@ app.use((req, res, next) => {
   });
   
 
-// Configura la carpeta de archivos estáticos
-app.use(express.static(path.join(__dirname, '../Front/public')));
+// Archivos estáticos (funciona tanto en local como en Render/Railway)
+const publicPath = path.resolve(__dirname, '../Front/public');
+app.use(express.static(publicPath));
+
 
 
 // Importar las rutas

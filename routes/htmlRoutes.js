@@ -6,39 +6,45 @@ const { verificarToken, verificarAdmin } = require("../middlewares/authMiddlewar
 
 
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/login.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/login.html'));
 });
+
 router.get('/abmRegister', verificarToken, verificarAdmin, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmRegister.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmRegister.html'));
 });
+
 router.get('/home', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/home.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/home.html'));
 });
 
 router.get('/dashboard', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/dashboard.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/dashboard.html'));
 });
 
 router.get('/productores', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmProductores.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmProductores.html'));
 });
+
 router.get('/matarifes', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmMatarifes.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmMatarifes.html'));
 });
+
 router.get('/transportes', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmTransportes.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmTransportes.html'));
 });
+
 router.get('/planificacion', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/planificacion.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/planificacion.html'));
 });
 
 router.get('/gordos', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmCargasGordos.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmCargasGordos.html'));
 });
 
 router.get('/invernadas', verificarToken, (req, res) => {
-    res.sendFile(path.join(__dirname, '../../Front/views/abmCargasInvernadas.html'));
+    res.sendFile(path.resolve(__dirname, '../../Front/views/abmCargasInvernadas.html'));
 });
+
 
 
 module.exports = router;
