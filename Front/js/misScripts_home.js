@@ -12,9 +12,12 @@ function closeNav() {
 function logout() {
   const API_BASE_URL = "https://consignataria-api.onrender.com";
 
+  // 🧹 Borrar token del localStorage
+  localStorage.removeItem("token");
+
+  // Opcional: notificar al backend para cerrar sesión si usás cookies en PC
   fetch(`${API_BASE_URL}/api/logout`, {
-    method: "POST",
-    credentials: "include"
+    method: "POST"
   })
     .then(response => {
       if (!response.ok) throw new Error("Error al cerrar sesión");
@@ -43,18 +46,29 @@ function logout() {
 // ================================
 window.addEventListener("load", () => {
   const API_BASE_URL = "https://consignataria-api.onrender.com";
+  const token = localStorage.getItem("token");
 
+  // Si no hay token, volver al login
+  if (!token) {
+    window.location.href = "/";
+    return;
+  }
+
+  // Verificar sesión con token en el header
   fetch(`${API_BASE_URL}/api/verify`, {
     method: "GET",
-    credentials: "include"
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
   })
     .then(response => {
-      if (!response.ok) window.location.href = '/';
+      if (!response.ok) throw new Error("No autorizado");
       return response.json();
     })
     .then(data => {
       // Cargar dashboard al inicio
-      document.getElementById("contenido").src = "https://consignataria-front.onrender.com/views/dashboard.html";
+      document.getElementById("contenido").src =
+        "https://consignataria-front.onrender.com/views/dashboard.html";
 
       // Mostrar "Usuarios" si es admin
       if (data.rol === "admin") {
@@ -67,10 +81,16 @@ window.addEventListener("load", () => {
     })
     .catch(error => {
       console.error("Error al verificar la autenticación:", error);
-      window.location.href = "/";
+      Swal.fire({
+        icon: "error",
+        title: "Sesión expirada",
+        text: "Por favor, inicia sesión nuevamente.",
+      }).then(() => {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      });
     });
 });
-
 
 // ================================
 // 🎨 MENÚ ACTIVO (resalta dinámicamente)
@@ -113,4 +133,5 @@ function inicializarMenuActivo() {
     });
   });
 }
+
 

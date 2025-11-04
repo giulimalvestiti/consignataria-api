@@ -2,7 +2,10 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 exports.verificarToken = (req, res, next) => {
-    const token = req.cookies.token;
+    const token =
+  req.cookies.token || 
+  (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+
     if (!token) {
         return res.redirect('/');
     }

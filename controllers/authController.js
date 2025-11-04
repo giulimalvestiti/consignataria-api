@@ -32,12 +32,12 @@ exports.login = async (req, res) => {
                 SECRET_KEY,
                 { expiresIn: "1h" }
             );
-            res.cookie("token", token, {
-                httpOnly: true,  //evita q la cookie sea leida con javascript
-                secure: process.env.NODE_ENV === "production",  //aca solo viaja por HTTPS
-                sameSite: "None" //otra capa de seguridad
-            });
-            return res.send("Login Correcto");
+            // 🔁 Devolvemos el token en el cuerpo (no como cookie)
+                return res.json({
+                mensaje: "Login Correcto",
+                token
+                });
+
         }
     );
 };

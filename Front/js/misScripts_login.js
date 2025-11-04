@@ -31,35 +31,43 @@ async function login() {
         });
     }
 
-    // Intentar enviar la solicitud con 'credentials: "include"' para permitir que se guarden las cookies
+    // ===============================
+    // 🟩 Envío de credenciales al backend (token vía JSON)
+    // ===============================
     try {
         const respuesta = await fetch('https://consignataria-api.onrender.com/api/login', {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 usuario: miUsuario,
                 contraseña: miContraseña,
-            }),
-            credentials: "include"
+            })
         });
 
-        const mensaje = await respuesta.text();
-        if (respuesta.ok) {
+        const data = await respuesta.json();
+
+        if (respuesta.ok && data.token) {
+            // ✅ Guardar el token en localStorage
+            localStorage.setItem("token", data.token);
+
             await Swal.fire({
                 icon: 'success',
                 title: 'Inicio de sesión exitoso',
-                text: mensaje,
+                text: data.mensaje || 'Bienvenido al sistema.',
+                timer: 1500,
+                showConfirmButton: false
             });
-            window.location.href = "/views/home"; // Redirigir al home
+
+            // ✅ Redirigir al home
+            window.location.href = "/views/home";
         } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Error en el inicio de sesión',
-                text: mensaje,
+                text: data.mensaje || 'Usuario o contraseña incorrectos.',
             });
         }
+
     } catch (error) {
         console.error("Error en la solicitud:", error);
         Swal.fire({
@@ -70,7 +78,9 @@ async function login() {
     }
 }
 
-// Limitar caracteres en los campos de entrada
+// ===============================
+// 🧩 Limitar caracteres en los campos de entrada
+// ===============================
 function limitarCaracteres(input, maxLength) {
     input.addEventListener("input", function () {
         if (input.value.length > maxLength) {
