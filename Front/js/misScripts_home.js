@@ -6,8 +6,13 @@ function closeNav() {
   document.getElementById("mobile-menu").style.width = "0%";
 }
 
+// =====================================
+// 🔐 Logout (cerrar sesión con Render)
+// =====================================
 function logout() {
-  fetch("http://localhost:3001/api/logout", {
+  const API_BASE_URL = "https://consignataria-api.onrender.com";
+
+  fetch(`${API_BASE_URL}/api/logout`, {
     method: "POST",
     credentials: "include"
   })
@@ -37,7 +42,9 @@ function logout() {
 // 🔐 Verificación de sesión y carga inicial
 // ================================
 window.addEventListener("load", () => {
-  fetch("http://localhost:3001/api/verify", {
+  const API_BASE_URL = "https://consignataria-api.onrender.com";
+
+  fetch(`${API_BASE_URL}/api/verify`, {
     method: "GET",
     credentials: "include"
   })
@@ -65,14 +72,15 @@ window.addEventListener("load", () => {
 });
 
 
-// MENÚ ACTIVO (resalta dinamicamente donde estoy parado)
-
+// ================================
+// 🎨 MENÚ ACTIVO (resalta dinámicamente)
+// ================================
 function inicializarMenuActivo() {
   const enlaces = document.querySelectorAll(".nav-links a");
   const enlacesMobile = document.querySelectorAll(".overlay-content a");
   const iframe = document.getElementById("contenido");
 
-  // Función que activa el enlace clickeado
+  // Activa el enlace clickeado
   function setActivo(linkSeleccionado) {
     [...enlaces, ...enlacesMobile].forEach(l => l.classList.remove("activo"));
     linkSeleccionado.classList.add("activo");
@@ -94,7 +102,7 @@ function inicializarMenuActivo() {
     });
   });
 
-  // Detectar carga de página dentro del iframe (por si se navega internamente)
+  // Detectar carga de página dentro del iframe
   iframe.addEventListener("load", () => {
     const urlActual = iframe.contentWindow.location.pathname;
     [...enlaces, ...enlacesMobile].forEach(l => {

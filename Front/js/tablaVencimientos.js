@@ -5,6 +5,9 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+  const API_BASE_URL = "https://consignataria-api.onrender.com";
+
+
   // Selecciona la tarjeta del Dashboard que abrirá el modal
   const vencimientosCard = document.querySelector(".card.border-danger, .card.bg-danger, .alert-danger");
 
@@ -15,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Cuando se abre el modal, cargar datos reales del backend
       try {
-        const resp = await fetch("/api/vencimientos"); // ← tu ruta del backend
+        const resp = await fetch(`${API_BASE_URL}/api/vencimientos`); // ← tu ruta del backend
         const data = await resp.json();
 
         const tabla = $('#tablaVencimientos').DataTable();
@@ -195,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nuevoEstado = data.estado === "Pendiente" ? "Pagado" : "Pendiente";
 
     try {
-      const resp = await fetch(`/api/vencimientos/${data.id_vencimiento}/estado`, {
+      const resp = await fetch(`${API_BASE_URL}/api/vencimientos/${data.id_vencimiento}/estado`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ estado: nuevoEstado })

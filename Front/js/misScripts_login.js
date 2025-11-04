@@ -33,7 +33,7 @@ async function login() {
 
     // Intentar enviar la solicitud con 'credentials: "include"' para permitir que se guarden las cookies
     try {
-        const respuesta = await fetch('http://localhost:3001/api/login', {
+        const respuesta = await fetch('https://consignataria-api.onrender.com/api/login', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
