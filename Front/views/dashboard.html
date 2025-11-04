@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Sistema Cargas</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tablaVencimientos.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+  <style>
+    #graficoGanancias { cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="container-fluid mt-4">
+
+  <!-- Tarjetas -->
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="card card-metric bg-primary text-white">
+        <div class="card-body">
+          <h6 class="card-title" id="tituloMensual"></h6>
+          <h3 id="gananciaMensual">$0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-metric bg-primary text-white">
+        <div class="card-body">
+          <h6 class="card-title" id="tituloAnual">Ganancia Anual Acumulada</h6>
+          <h3 id="gananciaAnual">$0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-metric bg-success text-white">
+        <div class="card-body">
+          <h6 class="card-title" id="tituloMensualCargas">Total Cargas Mensual</h6>
+          <h3 id="animalesVendidos">0</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-metric bg-success text-white">
+        <div class="card-body">
+          <h6 class="card-title" id="tituloAnualCargas">Total Cargas Anual</h6>
+          <h3 id="pagosPendientes">0</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row mt-4 g-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">Ganancias Mensuales</h6>
+          <canvas id="graficoGanancias"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">Cargas Mensuales</h6>
+          <canvas id="graficoCargasMensuales"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Segunda fila -->
+  <div class="row mt-4 g-3 align-items-stretch">
+    <!-- Distribución por tipo -->
+    <div class="col-md-2 col-sm-12">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <h6 class="card-title">Distribución por Tipo (Histórico)</h6>
+          <canvas id="graficoTipos" style="max-height:220px;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vencimientos próximos -->
+    <div class="col-md-5 col-sm-12">
+      <div class="card border-danger shadow-sm h-100">
+        <div class="card-header bg-danger text-white d-flex align-items-center">
+          <i class="bi bi-exclamation-triangle me-2"></i> Vencimientos Próximos
+        </div>
+        <!-- ⚠️ Aquí se inyectará la advertencia -->
+        <div id="alertaVencimientos"></div>
+        <ul class="list-group list-group-flush" id="listaVencimientos">
+
+          <li class="list-group-item text-muted">Sin vencimientos próximos</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Top 5 Rindes -->
+    <div class="col-md-5 col-sm-12">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <canvas id="graficoTopRindes" height="270"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal comparador de GANANCIAS -->
+  <div class="modal fade" id="modalComparador" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Comparar Ganancias por Año</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Año A</label>
+              <select id="yearA" class="form-select"></select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Año B</label>
+              <select id="yearB" class="form-select"></select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+              <button id="btnActualizarComparador" class="btn btn-primary w-100">Actualizar</button>
+            </div>
+          </div>
+          <div class="mt-3 position-relative">
+            <div id="loaderComparador" class="position-absolute top-50 start-50 translate-middle d-none">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+            <canvas id="graficoGananciasModal" style="height:420px;"></canvas>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnCerrarModalCompGanancias" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal comparador de CARGAS -->
+  <div class="modal fade" id="modalComparadorCargas" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Comparar Cargas por Año</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Año A</label>
+              <select id="yearA_cargas" class="form-select"></select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Año B</label>
+              <select id="yearB_cargas" class="form-select"></select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+              <button id="btnActualizarComparadorCargas" class="btn btn-primary w-100">Actualizar</button>
+            </div>
+          </div>
+          <div class="mt-3 position-relative">
+            <div id="loaderComparadorCargas" class="position-absolute top-50 start-50 translate-middle d-none">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+            <canvas id="graficoCargasModal" style="height:420px"></canvas>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnCerrarModalCompCargas" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal VENCIMIENTOS PRÓXIMOS -->
+  <div id="modalVencimientos" class="modal fade" tabindex="-1" aria-labelledby="modalVencimientosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalVencimientosLabel">Listado de Vencimientos Próximos</h5>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table id="tablaVencimientos" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                      <th>Fecha de Vencimiento</th>
+                      <th>Nº de Vencimiento</th>
+                      <th>Tipo de Carga</th>
+                      <th>Monto ($)</th>
+                      <th>Productor</th>
+                      <th>Contraparte</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btnCerrarModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- container-fluid -->
+
+
+<!-- ========== JS ========== -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<!-- Tus scripts -->
+<script src="js/dashboard.js"></script>
+<script src="js/tablaVencimientos.js"></script>
+
+</body>
+</html>
+
+

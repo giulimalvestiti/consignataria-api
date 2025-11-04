@@ -1,0 +1,111 @@
+/* === Tarjetas === */
+.card-metric {
+  border-radius: 10px;
+  text-align: center;
+}
+.card-metric h3 {
+  font-weight: bold;
+}
+/* Aumento tamaño del título de cada Kpi */
+.card-metric .card-title {
+  font-size: 1.3rem;     
+  font-weight: 600;      
+  letter-spacing: 0.3px;  /* Un poco más de aire entre letras */
+}
+
+/* === Ajuste de layout con scroll === */
+html, body {
+    height: auto;           /* No forzar altura fija */
+    min-height: 100vh;      /* Asegurar que ocupe toda la pantalla */
+    margin: 0;
+    overflow-x: hidden;     /* Ocultar scroll horizontal */
+    overflow-y: auto;       /* Permitir scroll vertical */
+}
+
+.container-fluid {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem; /* evitar que el último elemento quede pegado abajo */
+    padding-bottom: 100px; /* Espacio extra para que se vea el final */
+}
+
+/* === Gráficos más compactos === */
+canvas {
+    max-height: 220px; /* Limita la altura de cada gráfico */
+}
+
+/* Ajuste de las filas de gráficos */
+.row.g-3 {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+/* Estilo personalizado para las fechas de vencimientos */
+#listaVencimientos .badge {
+    font-size: 0.88rem;      
+    padding: 0.6em 0.9em; 
+    font-weight: bold;   
+}
+
+
+#graficoGanancias {
+  transition: transform 0.25s ease; /* animación suave */
+}
+
+#graficoGanancias:hover {
+  transform: scale(1.02); /* lo agranda apenas */
+  box-shadow: 0 0 15px rgba(0, 102, 255, 0.4); /* opcional: un glow azul */
+  border-radius: 8px; /* opcional: redondeo sutil */
+}
+
+#graficoCargasMensuales { 
+    transition: transform .25s ease; 
+    cursor: pointer; }
+
+#graficoCargasMensuales:hover { 
+    transform: scale(1.02); 
+    box-shadow: 0 0 15px rgba(25,135,84,.35); 
+    border-radius: 8px; }
+
+    
+
+#listaVencimientos li {
+  
+  padding: 6px 10px;          /* Menos espacio entre items */
+  line-height: 1.2;           /* Compacta altura */
+}
+
+
+
+/* 🔹 Efecto de resalte al pasar el mouse sobre la tarjeta de Vencimientos */
+.card.border-danger {
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(220, 53, 69, 0.5); /* mismo rojo del header */
+}
+
+/* 🔹 Hover con brillo violeta suave y elevación */
+.card.border-danger:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(121, 82, 179, 0.5); /* violeta del tema */
+  cursor: pointer;
+}
+
+/* 🔹 Que el encabezado rojo también tenga una leve sombra */
+.card.border-danger .card-header {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔹 Suaviza los bordes y el cambio de color */
+.card.border-danger, 
+.card.border-danger .card-header {
+  border-radius: 10px;
+  transition: all 0.25s ease-in-out;
+}
+
+
+#alertaVencimientos span {
+  font-size: 0.95rem !important; /* se iguala al tamaño de la cabecera */
+}

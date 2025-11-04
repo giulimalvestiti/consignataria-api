@@ -1,0 +1,182 @@
+table.dataTable thead {
+    background-color: #7952b3;
+    color: aliceblue;
+}
+
+.modal-header {
+    background-color: #23272b;
+    color: white;
+}
+
+.btnEditar {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+}
+
+.btnBorrar {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btnVer {
+    background-color: #159405;
+    color: white;
+    border: none;
+}
+
+
+.table-responsive {
+    
+    height: calc(100vh - 160px); /* Ajuste similar al calendario */
+}
+
+
+
+/* 🔹 Asegurar que el ícono herede el color del botón */
+.btnVer i, .btnEditar i, .btnBorrar i {
+    color: white !important; /* Asegura que el ícono siempre sea blanco */
+    transition: color 0.3s ease-in-out;
+}
+
+/* 🔹 Efecto hover para que el botón completo cambie de color */
+.btnVer:hover {
+    background-color: #046c04 !important; /* Un verde más oscuro */
+}
+.btnEditar:hover {
+    background-color: #027ca7 !important; /* Un azul más oscuro */
+}
+.btnBorrar:hover {
+    background-color: #a70000 !important; /* Un rojo más oscuro */
+}
+
+/* ---------- MODAL CRUD ESTILOS ---------- */
+#modalCRUD .form-control {
+    margin-bottom: 4px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  height: 26px !important;
+  font-size: 0.85rem !important;
+}
+
+#modalVer .modal-body p {
+    margin-bottom: 10px;
+}
+
+#modalCRUD label {
+    font-weight: 500;
+}
+
+
+/* Modal ancho */
+.modal-wide {
+    max-width: 90% !important;
+}
+
+/* Columnas equilibradas */
+.col-custom-balanced {
+    width: 40%;
+    padding-right: 30px;
+    padding-left: 30px;
+    
+}
+
+/* 🟩 Primera columna más ancha */
+.col-balanced-wide {
+    width: 70%;
+    padding: 0 30px;
+    border-right: 2px solid #8fa9b457;
+}
+
+/* 🟦 y 🟥 Columnas más angostas */
+.col-balanced-narrow {
+    width: 20%;
+    padding: 0 15px;
+}
+
+.input-cantidad {
+    width: 70px !important;
+  }
+
+  .w-40 {
+    width: 100% !important;
+}
+
+.modal.show .modal-dialog {
+  margin-top: 0px !important; /* Subí o bajá este valor a gusto */
+}
+
+.mb-3{
+     margin-bottom: 9px !important;
+}
+
+.seccion-titulo {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: #343a40;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+}
+
+/*codigo para que el modal de la carga se vea bien en patanllas de celu*/
+/* Lo que ya tenías para que no se rompa el layout dentro del modal */
+@media (max-width: 768px) {
+  #modalCRUD .modal-body > .row {         /* tu fila que contiene las 2/3 columnas */
+    flex-wrap: nowrap;
+    min-width: 1200px;                     /* subí a 1300/1400 si te queda justo */
+  }
+  #modalCRUD .col-custom-balanced,
+  #modalCRUD .col-balanced-wide,
+  #modalCRUD .col-balanced-narrow {
+    flex: 0 0 auto;
+    width: auto;
+  }
+}
+
+/* === Hacer que la barra sea la del *viewport* cuando el modal está abierto === */
+
+/* Bootstrap pone overflow hidden al body. Lo revertimos sólo con el modal abierto */
+body.modal-open, html.modal-open {
+  overflow-x: auto !important;   /* 👈 habilita scroll horizontal del viewport */
+  /* si querés mantener sin scroll vertical del viewport: */
+  /* overflow-y: hidden !important; */
+}
+
+/* El contenedor del modal ocupa toda la pantalla y será el que muestre la barra */
+.modal {
+  overflow-x: auto !important;   /* 👈 la barra aparece al pie de la ventana */
+}
+
+/* Asegurá que el contenido del modal sea más ancho que la ventana */
+@media (max-width: 768px) {
+  #modalCRUD .modal-dialog {
+    max-width: none;             /* sin límite Bootstrap */
+  }
+  #modalCRUD .modal-content {
+    min-width: 1200px;           /* fuerza que exceda el viewport */
+  }
+}
+
+
+.titulo-seccion {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1b3039;
+  text-align: center;
+   margin: 20px 0 -20px 0;  /* arriba | lados | abajo */
+}
+
+/*me sirve para q el fondo de el titulo ej PRODUCTORES se vea uniforme del mismo color*/
+.row.shadow-lg {
+  background-color: #f4f4f4 !important;
+  
+}
+
+
+
+
+

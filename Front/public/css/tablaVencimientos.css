@@ -1,0 +1,108 @@
+/* 🔹 Encabezado de la tabla */
+table.dataTable thead {
+    background-color: #7952b3; /* violeta principal */
+    color: aliceblue;
+}
+
+/* 🔹 Encabezado del modal */
+.modal-header {
+    background-color: #23272b;
+    color: white;
+}
+
+/* 🔹 Ajuste para el contenedor de la tabla dentro del modal */
+.table-responsive {
+    max-height: 70vh; /* evita que el modal crezca demasiado */
+    overflow-y: auto;
+}
+
+/* 🔹 Botones dentro de la tabla */
+.btnVer {
+    background-color: #17a2b8; /* celeste */
+    color: white;
+    border: none;
+}
+
+.btnToggleEstado {
+    border: none;
+    color: white;
+}
+
+/* ✅ Colores según el tipo de acción */
+.btnToggleEstado.btn-outline-success {
+    background-color: #198754; /* verde Bootstrap */
+    color: white;
+}
+
+.btnToggleEstado.btn-outline-warning {
+    background-color: #ffc107; /* amarillo Bootstrap */
+    color: black;
+}
+
+/* 🔹 Hover general para botones */
+.btnVer:hover {
+    background-color: #0f6674 !important;
+}
+
+.btnToggleEstado.btn-outline-success:hover {
+    background-color: #0d5e42 !important;
+}
+
+.btnToggleEstado.btn-outline-warning:hover {
+    background-color: #e0a800 !important;
+}
+
+/* 🔹 Íconos siempre visibles */
+.btnVer i,
+.btnToggleEstado i {
+    color: inherit !important;
+    transition: transform 0.2s ease;
+}
+
+.btnVer:hover i,
+.btnToggleEstado:hover i {
+    transform: scale(1.1);
+}
+
+/* 🔹 Badge de estado */
+.badge {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 0.5rem;
+}
+
+/* 🔹 Estilo del título del modal */
+#modalVencimientosLabel {
+    font-weight: 700;
+}
+
+/* 🔹 Quita el scroll horizontal innecesario */
+#tablaVencimientos {
+    width: 100% !important;
+    border-collapse: collapse;
+}
+
+
+/* Hacer el modal bien ancho en pantallas grandes */
+#modalVencimientos .modal-dialog {
+  max-width: 95vw;           /* ocupa el 95% del ancho de la ventana */
+}
+
+@media (min-width: 1200px) {
+  #modalVencimientos .modal-dialog {
+    max-width: 1600px;       /* o el ancho fijo que quieras en desktop */
+  }
+}
+
+/* 🔹 Evitar que los encabezados de tabla se corten en dos líneas */
+#tablaVencimientos th {
+  white-space: nowrap;       /* mantiene el texto en una sola línea */
+  text-align: center;        /* opcional, centra el texto */
+  vertical-align: middle;    /* alinea verticalmente el contenido */
+}
+
+/* 🔹 Subir el modal para que no quede tan abajo */
+#modalVencimientos .modal-dialog {
+  margin-top: 1vh !important;   /* 🔹 lo acerca al borde superior */
+
+}

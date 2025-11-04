@@ -1,0 +1,66 @@
+table.dataTable thead {
+    background-color: #7952b3;
+    color: aliceblue;
+}
+
+.modal-header {
+    background-color: #23272b;
+    color: white;
+}
+
+.btnEditar {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+}
+
+.btnBorrar {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btnVer {
+    background-color: #159405;
+    color: white;
+    border: none;
+}
+
+
+.table-responsive {
+    
+    height: calc(100vh - 160px); /* Ajuste similar al calendario */
+}
+
+
+
+/* 🔹 Asegurar que el ícono herede el color del botón */
+.btnVer i, .btnEditar i, .btnBorrar i {
+    color: white !important; /* Asegura que el ícono siempre sea blanco */
+    transition: color 0.3s ease-in-out;
+}
+
+/* 🔹 Efecto hover para que el botón completo cambie de color */
+.btnVer:hover {
+    background-color: #046c04 !important; /* Un verde más oscuro */
+}
+.btnEditar:hover {
+    background-color: #027ca7 !important; /* Un azul más oscuro */
+}
+.btnBorrar:hover {
+    background-color: #a70000 !important; /* Un rojo más oscuro */
+}
+
+.titulo-seccion {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1b3039;
+  text-align: center;
+   margin: 20px 0 -20px 0;  /* arriba | lados | abajo */
+}
+
+/*me sirve para q el fondo de el titulo ej PRODUCTORES se vea uniforme del mismo color*/
+.row.shadow-lg {
+  background-color: #f4f4f4 !important;
+  
+}

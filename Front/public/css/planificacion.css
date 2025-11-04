@@ -1,0 +1,96 @@
+/* styles.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    max-width: 100%;
+    height: 100vh;
+    margin-top: 50px;
+}
+
+#calendar {
+    width: 95vw; /* Mantiene el ancho flexible */
+    max-width: 1800px; /* Máximo 1800px en pantallas grandes */
+    height: calc(100vh - 160px); /* Aumentamos la altura para que sobre más abajo */
+    max-height: calc(100vh - 160px); /* Evita desbordes */
+    margin-bottom: 30px; /* Más margen abajo */
+    font-family: Arial, sans-serif;
+}
+
+
+
+
+/* 🔹 Restaurar estilos originales del FullCalendar */
+.fc-col-header-cell {
+    background-color: #7887889c !important;
+}
+
+.fc-col-header-cell a {
+    color: #000 !important; /* Mantiene la letra negra */
+    text-decoration: none !important;
+    font-weight: bold;
+}
+
+
+.fc-daygrid-day-number {
+    color: #333 !important; /* Restaurar color de los días */
+    text-decoration: none;
+}
+
+.fc-event {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px;
+    border-radius: 5px;
+    color: black;
+}
+
+.modal-header {
+    background-color: #23272b;
+    color: white;
+}
+
+/* Efecto hover para cada celda de día */
+.fc-daygrid-day:hover {
+  background-color: #8878781e;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px #7887889c;
+  border-radius: 6px;
+}
+
+.fc-day-today {
+    background-color: #98d39c7a !important; /* Cambiá este color por el que quieras */
+}
+
+
+
+.titulo-seccion {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1b3039;
+  text-align: center;
+   margin: 20px 0 -40px 0;  
+}
+
+/* 🔹 Oscurecer líneas del calendario */
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid td,
+.fc .fc-scrollgrid th {
+  border-color: #8c8c8c !important;
+}

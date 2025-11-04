@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables - Gordos</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="css/abm_Carga_Gordos.css">
+</head>
+<body>
+  <h2 class="titulo-seccion mt-3">CARGAS FAENA</h2>
+    <div class="container-fluid">
+        <div class="row shadow-lg p-3 mb-5">
+            <div class="col">
+                <button id="btnCrear" class="btn btn-dark mt-2">Crear</button>
+                <div class="table-responsive">
+                    <table id="tablaCargas" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Productor</th>
+                                <th>Matarife</th>
+                                <th>Transporte</th>
+                                <th>Descripción</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table> 
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalCRUD" tabindex="-1" aria-labelledby="modalCRUDLabel" aria-hidden="true">
+        <div class="modal-dialog modal-wide modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Crear Carga Faena</h5>
+            </div>
+      
+            <form id="formCarga">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                      <div class="d-flex">
+                        
+                        <!-- 🟩 COLUMNA 1 -->
+                        <div class="col-balanced-wide">
+                          <p class="seccion-titulo">Datos Carga</p>
+                          <div class="mb-3 w-25">
+                            <label for="fecha_carga">Fecha</label>
+                            <input type="date" id="fecha_carga" class="form-control">
+                          </div>
+                  
+                          <div class="mb-3 d-flex">
+                            <div class="w-40"  style="margin-right: 15px;">
+                              <label for="productor">Productor</label>
+                              <select id="productor" class="form-select"></select>
+                            </div>
+                            <div class="w-40" style="margin-right: 15px;">
+                              <label for="matarife">Matarife</label>
+                              <select id="matarife" class="form-select"></select>
+                            </div>
+                            <div class="w-40" style="margin-right: 15px;">
+                              <label for="transporte">Transporte</label>
+                              <select id="transporte" class="form-select"></select>
+                            </div>
+                          </div>
+
+                        
+                          <div class="mb-3 d-flex align-items-start">
+                            <!-- Columna izquierda -->
+                            <div class="w-25">
+                              <label for="bruto">Bruto</label>
+                              <input type="number" id="bruto" class="form-control mb-2">
+                              <label for="tara">Tara</label>
+                              <input type="number" id="tara" class="form-control mb-2">
+                              <label for="neto">Neto</label>
+                              <input type="number" id="neto" class="form-control mb-2" disabled>
+                            </div>
+                        
+                            <!-- Columna derecha -->
+                            <div style="margin-left: 500px;">
+                              <label for="machos">Machos</label>
+                              <input type="number" id="machos" class="form-control input-cantidad mb-2">
+                              <label for="hembras">Hembras</label>
+                              <input type="number" id="hembras" class="form-control input-cantidad mb-2">
+                              <label for="total_animales">Total animales</label>
+                              <input type="number" id="total_animales" class="form-control input-cantidad mb-2" disabled>
+                            </div>
+                          </div>
+                          
+                          <div class="mb-3 d-flex">
+                            <div class="w-25" style="margin-right: 15px;">
+                              <label for="desbaste">Desbaste (%)</label>
+                              <input type="number" id="desbaste" class="form-control" min="0" max="10">
+                            </div>
+                            <div class="w-25" style="margin-right: 15px;">
+                              <label for="neto_con_desbaste">Neto con Desbaste</label>
+                              <input type="number" id="neto_con_desbaste" class="form-control" disabled>
+                            </div>
+                            <div class="w-25" style="margin-right: 15px;">
+                              <label for="precio_productor">Precio al Productor</label>
+                              <input type="number" id="precio_productor" class="form-control">
+                            </div>
+                          </div>
+                          
+                          <div class="w-40">
+                            <label for="monto_pagar">Monto a pagar al productor</label>
+                            <input type="number" id="monto_pagar" class="form-control" disabled>
+                          </div>
+                  
+                          <div class="mb-3">
+                            <label for="descripcion">Descripción</label>
+                            <input type="text" id="descripcion" class="form-control">
+                          </div>
+                        </div>
+                  
+                        <!-- 🟨 COLUMNA 2 - VENCIMIENTOS -->
+                        <div class="col-balanced-narrow col-balanced-wide" style="margin-left: 20px;">
+                          <p class="seccion-titulo">Vencimientos</p>
+                          <div class="mb-3">
+                            <label for="cantidadVencimientos">Cantidad de Vencimientos</label>
+                            <select id="cantidadVencimientos" class="form-select">
+                              <option value="0">Contado</option>
+                              <option value="1">1 vencimiento</option>
+                              <option value="2">2 vencimientos</option>
+                              <option value="3">3 vencimientos</option>
+                              <option value="4">4 vencimientos</option>
+                              <option value="5">5 vencimientos</option>
+                            </select>
+                          </div>
+
+                          <div id="bloqueVencimientosFechas">
+                          <div class="mb-3 vencimiento-input" id="grupo_vencimiento_1">
+                            <label>Fecha de Vencimiento 1</label>
+                            <input type="date" id="vencimiento_1" class="form-control">
+                          </div>
+                          <div class="mb-3 vencimiento-input" id="grupo_vencimiento_2">
+                            <label>Fecha de Vencimiento 2</label>
+                            <input type="date" id="vencimiento_2" class="form-control">
+                          </div>
+                          <div class="mb-3 vencimiento-input" id="grupo_vencimiento_3">
+                            <label>Fecha de Vencimiento 3</label>
+                            <input type="date" id="vencimiento_3" class="form-control">
+                          </div>
+                          <div class="mb-3 vencimiento-input" id="grupo_vencimiento_4">
+                            <label>Fecha de Vencimiento 4</label>
+                            <input type="date" id="vencimiento_4" class="form-control">
+                          </div>
+                          <div class="mb-3 vencimiento-input" id="grupo_vencimiento_5">
+                            <label>Fecha de Vencimiento 5</label>
+                            <input type="date" id="vencimiento_5" class="form-control">
+                          </div>
+                        </div>
+
+                        </div>
+
+
+
+                        <!-- 🟦 COLUMNA 3 -->
+                        <div class="col-balanced-narrow col-balanced-wide">
+                          <p class="seccion-titulo">Liquidación Productor</p>
+                          <div class="mb-3"><label>Fecha Faena</label><input type="date" id="fecha_faena" class="form-control"></div>
+                          <div class="mb-3"><label>Kilogramos Faenados</label><input type="number" id="kilos_faenados" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Porcentaje Rinde (%)</label><input type="number" id="porcentaje_rinde" class="form-control" disabled></div>
+                          <div class="mb-3"><label>Retención Ganancia</label><input type="number" id="retencion_ganancia" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>IVA</label><input type="number" id="iva" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Cheque Físico</label><input type="number" id="cheque_fisico" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Cheque Electrónico</label><input type="number" id="cheque_electronico" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Transferencia</label><input type="number" id="transferencia" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Efectivo</label><input type="number" id="efectivo" class="form-control" step="any" disabled></div>
+                        </div>
+                  
+                        <!-- 🟥 COLUMNA 4 -->
+                        <div class="col-balanced-narrow">
+                          <p class="seccion-titulo">Ganancias y Comisiones</p>
+                          <div class="mb-3"><label>Precio Matarife</label><input type="number" id="precio_matarife" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Porcentaje Comisión (%)</label><input type="number" id="porcentaje_comision" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Ganancia Comisión</label><input type="number" id="ganancia_comision" class="form-control" step="any" disabled></div>
+                          <div class="mb-3"><label>Ganancia Diferencia en Precio</label><input type="number" id="ganancia_diferencia" class="form-control" step="any" disabled></div>
+                          <div class="mb-3"><label>Gastos de Transporte</label><input type="number" id="gastos_transporte" class="form-control" step="any"></div>
+                          <div class="mb-3"><label>Ganancia Total Carga</label><input type="number" id="ganancia_total" class="form-control" step="any" disabled></div>
+                        </div>
+                        
+                      
+
+
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                  </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+      
+
+
+
+  <!-- MODAL VER DETALLES CARGA GORDOS -->
+  <div id="modalVer" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 80%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Detalles de la Carga</h5>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- Columna 1 -->
+              <div class="col-md-3">
+                <p class="seccion-titulo">Datos Carga</p>
+                <p><strong>Fecha:</strong> <span id="ver_fecha_carga"></span></p>
+                <p><strong>Productor:</strong> <span id="ver_productor"></span></p>
+                <p><strong>Matarife:</strong> <span id="ver_matarife"></span></p>
+                <p><strong>Transporte:</strong> <span id="ver_transporte"></span></p>
+                <p><strong>Bruto:</strong> <span id="ver_kilogramos_bruto"></span></p>
+                <p><strong>Tara:</strong> <span id="ver_kilogramos_tara"></span></p>
+                <p><strong>Neto:</strong> <span id="ver_kilogramos_neto"></span></p>
+                <p><strong>Desbaste:</strong> <span id="ver_porcentaje_desbaste"></span></p>
+                <p><strong>Neto con Desbaste:</strong> <span id="ver_neto_con_desbaste"></span></p>
+                <p><strong>Precio al Productor:</strong> <span id="ver_precio_al_productor"></span></p>
+                <p><strong>Monto a pagar al productor:</strong> <span id="ver_monto_total"></span></p>
+                <p><strong>Machos:</strong> <span id="ver_machos"></span></p>
+                <p><strong>Hembras:</strong> <span id="ver_hembras"></span></p>
+                <p><strong>Total Animales:</strong> <span id="ver_total_animales"></span></p>
+                <p><strong>Descripción:</strong> <span id="ver_descripcion"></span></p>
+              </div>
+
+
+
+              <!-- Columna 2 - Vencimientos -->
+              <div class="col-md-2">
+                <p class="seccion-titulo">Vencimientos</p>
+                <ul id="lista_vencimientos" style="padding-left: 20px;"></ul>
+              </div>
+
+              <!-- Columna 3 -->
+              <div class="col-md-3">
+                <p class="seccion-titulo">Liquidación Productor</p>
+                <p><strong>Fecha Faena:</strong> <span id="ver_fecha_faena"></span></p>
+                <p><strong>Kilogramos Faenados:</strong> <span id="ver_kilogramos_faenado"></span></p>
+                <p><strong>Porcentaje Rinde:</strong> <span id="ver_porcentaje_rinde"></span></p>
+                <p><strong>Retención Ganancia:</strong> <span id="ver_ret_ganancia"></span></p>
+                <p><strong>IVA:</strong> <span id="ver_iva"></span></p>
+                <p><strong>Cheque Físico:</strong> <span id="ver_cheque_fisico"></span></p>
+                <p><strong>Cheque Electrónico:</strong> <span id="ver_cheque_electronico"></span></p>
+                <p><strong>Transferencia:</strong> <span id="ver_transferencia"></span></p>
+                <p><strong>Efectivo:</strong> <span id="ver_efectivo"></span></p>
+              </div>
+
+              <!-- Columna 4 -->
+               <div class="col-md-3">
+                <p class="seccion-titulo">Ganancias y Comisiones</p>
+                <p><strong>Precio Matarife:</strong> <span id="ver_precio_matarife"></span></p>
+                <p><strong>Porcentaje Comisión:</strong> <span id="ver_porcentaje_comision"></span></p>
+                <p><strong>Ganancia Comisión:</strong> <span id="ver_ganancia_comision"></span></p>
+                <p><strong>Ganancia Diferencia en Precio:</strong> <span id="ver_ganancia_en_precio"></span></p>
+                <p><strong>Gastos de Transporte:</strong> <span id="ver_gastos_transporte"></span></p>
+                <p><strong>Ganancia Total Carga:</strong> <span id="ver_ganancia_total"></span></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-success" id="btnExportarExcel">
+            <i class="bi bi-file-earmark-excel"></i> Reporte Productor
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
+
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <!-- Archivo JS con la lógica -->
+    <script src="js/abmCargasGordos.js"></script>
+</body>
+</html>

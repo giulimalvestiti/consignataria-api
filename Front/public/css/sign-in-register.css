@@ -1,0 +1,41 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/img/foto1.jpeg'); /* Ruta de tu imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.container {
+  max-width: 500px; /* Ajusta el tamaño del formulario */
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.card-header {
+  font-size: 1.25rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
