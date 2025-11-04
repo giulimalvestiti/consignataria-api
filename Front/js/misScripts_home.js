@@ -54,7 +54,7 @@ window.addEventListener("load", () => {
     })
     .then(data => {
       // Cargar dashboard al inicio
-      document.getElementById("contenido").src = "https://consignataria-front.onrender.com/front/dashboard.html";
+      document.getElementById("contenido").src = "https://consignataria-front.onrender.com/views/dashboard.html";
 
       // Mostrar "Usuarios" si es admin
       if (data.rol === "admin") {
