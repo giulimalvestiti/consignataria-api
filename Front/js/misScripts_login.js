@@ -52,7 +52,7 @@ async function login() {
                 title: 'Inicio de sesión exitoso',
                 text: mensaje,
             });
-            window.location.href = "/home"; // Redirigir al home
+            window.location.href = "/views/home"; // Redirigir al home
         } else {
             Swal.fire({
                 icon: 'error',
