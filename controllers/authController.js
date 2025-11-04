@@ -44,8 +44,10 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
     res.clearCookie("token");
-    return res.send("Sesión cerrada");
+    res.setHeader("Content-Type", "text/plain"); // 👈 fuerza texto plano
+    return res.send("Sesión cerrada correctamente");
 };
+
 
 exports.verify = (req, res) => {
     if (!req.usuario) {
