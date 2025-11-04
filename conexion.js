@@ -11,8 +11,9 @@ const conexion = mysql.createConnection({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT || 3306,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true } : false
+    ssl: false
 });
+
  
 //Nos conectamos con la base
 conexion.connect(function (error) {
