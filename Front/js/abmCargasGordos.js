@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async function () {
-  const url = "http://localhost:3001/api/gordos/";
+  const url = "https://consignataria-api.onrender.com/api/gordos/";
   let opcion = null;
   let tablaCargas;
   let idCargaEnEdicion = null;
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // ------------------------------------------------------------------------
   async function cargarProductores() {
     try {
-      const response = await fetch("http://localhost:3001/api/productores", {
+      const response = await fetch("https://consignataria-api.onrender.com/api/productores", {
         credentials: "include",
       });
       const productores = await response.json();
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Carga la lista de Matarifes en el select del formulario
   async function cargarMatarifes() {
     try {
-      const response = await fetch("http://localhost:3001/api/matarifes", {
+      const response = await fetch("https://consignataria-api.onrender.com/api/matarifes", {
         credentials: "include",
       });
       const matarifes = await response.json();
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Carga la lista de Transportes en el select del formulario
   async function cargarTransportes() {
     try {
-      const response = await fetch("http://localhost:3001/api/transportes", {
+      const response = await fetch("https://consignataria-api.onrender.com/api/transportes", {
         credentials: "include",
       });
       const transportes = await response.json();
@@ -398,6 +398,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         method: metodo,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datos),
+        credentials: "include",
       });
 
       const resultado = await response.text();
@@ -505,7 +506,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Vencimientos (edición)
         const respVencimientos = await fetch(
-          `http://localhost:3001/api/vencimientos/${data.idCargaGordo}?tipo=gordo`
+          `https://consignataria-api.onrender.com/api/vencimientos/${data.idCargaGordo}?tipo=gordo`,
+          { credentials: "include" }
         );
         const vencimientos = await respVencimientos.json();
 
@@ -599,8 +601,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
         // Mostrar vencimientos
         const respVencimientos = await fetch(
-          `http://localhost:3001/api/vencimientos/${data.idCargaGordo}?tipo=gordo`
+          `https://consignataria-api.onrender.com/api/vencimientos/${data.idCargaGordo}?tipo=gordo`,
+          { credentials: "include" }
         );
+
         const vencimientos = await respVencimientos.json();
 
         const lista = document.getElementById("lista_vencimientos");
@@ -633,7 +637,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           cancelButtonText: "Cancelar",
         }).then(async (result) => {
           if (result.isConfirmed) {
-            await fetch(url + data.idCargaGordo, { method: "DELETE" });
+            await fetch(url + data.idCargaGordo, { method: "DELETE",  credentials: "include", });
             await recargarTabla();
             Swal.fire("Eliminado", "La carga ha sido eliminada", "success");
           }
@@ -675,11 +679,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       try {
         const response = await fetch(
-          "http://localhost:3001/api/gordos/reporte-productor",
+          "https://consignataria-api.onrender.com/api/gordos/reporte-productor",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datos),
+            credentials: "include",
           }
         );
 

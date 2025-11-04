@@ -2,7 +2,7 @@
 // ABM Matarifes - DataTable + Validaciones de formulario
 // -----------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", async function () {
-    let url = "http://localhost:3001/api/matarifes/";
+    let url = "https://consignataria-api.onrender.com/api/matarifes/";
     let opcion = null;
     let tablaMatarifes;
 
@@ -94,7 +94,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     // -------------------------------------------------------------------------
     async function obtenerMatarifes() {
         try {
-            let response = await fetch(url);
+            let response = await fetch(url, {
+                credentials: "include"
+            });
             let data = await response.json();
             return data;
         } catch (error) {
@@ -310,6 +312,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos),
+                credentials: "include"
             });
             if (!resp.ok) {
                 const txt = await resp.text();
@@ -348,7 +351,7 @@ document.getElementById("tablaMatarifes").addEventListener("click", async functi
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(url + idMatarife, { method: "DELETE" });
+                    const response = await fetch(url + idMatarife, { method: "DELETE", credentials: "include" });
                     const mensaje = await response.text();
 
                     if (!response.ok) {

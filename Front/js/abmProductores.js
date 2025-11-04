@@ -1,6 +1,6 @@
 // ABM Productores - DataTable + Validaciones de formulario
 document.addEventListener("DOMContentLoaded", async function () {
-    let url = "http://localhost:3001/api/productores/";
+    let url = "https://consignataria-api.onrender.com/api/productores/";
     let opcion = null;
     let tablaProductores;
 
@@ -85,7 +85,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     async function obtenerProductores() {
         try {
-            let response = await fetch(url);
+            let response = await fetch(url, {
+                    credentials: "include"
+                });
             let data = await response.json();
             return data;
         } catch (error) {
@@ -298,6 +300,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 method: metodo,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(datos),
+                credentials: "include"
             });
             if (!resp.ok) {
                 const txt = await resp.text();
@@ -336,7 +339,7 @@ document.getElementById("tablaProductores").addEventListener("click", async func
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(url + idProductor, { method: "DELETE" });
+                    const response = await fetch(url + idProductor, { method: "DELETE", credentials: "include" });
                     const mensaje = await response.text();
 
                     if (!response.ok) {

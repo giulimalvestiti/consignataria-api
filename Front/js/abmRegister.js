@@ -1,6 +1,6 @@
 // ABM USUARIOS (solo lo ve el Admin)
 document.addEventListener("DOMContentLoaded", async function () {
-  const url = "http://localhost:3001/api/usuarios/";
+  const url = "https://consignataria-api.onrender.com/api/usuarios/";
   let tablaUsuarios;
   let modo = null;        //  toma valor "crear" o "editar"
   let idEdit = null;
