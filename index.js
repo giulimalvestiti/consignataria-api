@@ -1,7 +1,7 @@
 const express = require("express");  //framework para crear API, creo una instancia de express
 const cors = require("cors"); //la API permite peticiones desde otros dominios, ej front
 const path = require("path");  //para rutas de archivo
-const cookieParser = require('cookie-parser');  //manejo de cookies
+const cookieParser = require('cookie-parser');  //manejo de cookiess
 const dotenv = require('dotenv'); //variables de entorno
 
 dotenv.config();
