@@ -64,7 +64,8 @@ async function login() {
       });
 
       // ✅ Redirigir al Home
-      window.location.href = "/views/home";
+      window.location.href = "https://consignataria-front.onrender.com/views/home.html";
+
     } else {
       Swal.fire({
         icon: "error",
