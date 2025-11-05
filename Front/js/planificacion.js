@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  // ===============================
-  // 🔐 Configuración principal
-  // ===============================
   const API_BASE_URL = "https://consignataria-api.onrender.com";
   const token = localStorage.getItem("token");
 
+  // ✅ Verificar token al cargar
   if (!token) {
     Swal.fire({
       icon: "error",
       title: "Sesión expirada",
       text: "Por favor, inicia sesión nuevamente.",
     }).then(() => {
-      window.top.location.href = "/"; // redirige al login
+      window.top.location.href = "/";
     });
     return;
   }
@@ -33,13 +31,24 @@ document.addEventListener("DOMContentLoaded", function () {
       day: "Día",
       list: "Lista"
     },
-
-    // ✅ Ahora los eventos se cargan con autorización
-    events: async function(fetchInfo, successCallback, failureCallback) {
+    events: async function (fetchInfo, successCallback, failureCallback) {
       try {
         const res = await fetch(`${API_BASE_URL}/api/eventos`, {
-          headers: { "Authorization": `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
+
+        if (res.status === 401 || res.status === 403) {
+          Swal.fire({
+            icon: "error",
+            title: "Sesión expirada",
+            text: "Por favor, inicia sesión nuevamente.",
+          }).then(() => {
+            localStorage.removeItem("token");
+            window.top.location.href = "/";
+          });
+          return;
+        }
+
         const data = await res.json();
         successCallback(data);
       } catch (error) {
@@ -47,11 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
         failureCallback(error);
       }
     },
-
     dateClick: function (info) {
       openModal(info.dateStr);
     },
-
     eventClick: function (info) {
       Swal.fire({
         title: "Opciones del Evento",
@@ -59,12 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
         icon: "info",
         showCancelButton: true,
         showDenyButton: true,
-        confirmButtonColor: "#3085d6",
-        denyButtonColor: "#d33",
-        cancelButtonColor: "#6c757d",
         confirmButtonText: "Editar",
         denyButtonText: "Eliminar",
-        cancelButtonText: "Cancelar"
+        cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
           openModal(info.event);
@@ -73,40 +77,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     },
-
     eventDrop: function (info) {
       updateEvent(info.event);
     },
-
-    datesSet: function (info) {
-      let headerTitle = document.querySelector(".fc-toolbar-title");
-      if (headerTitle) {
-        headerTitle.textContent =
-          info.view.title.charAt(0).toUpperCase() +
-          info.view.title.slice(1).toLowerCase();
-      }
-    }
   });
+
   calendar.render();
 
   // ===============================
-  // 🧩 Modal de eventos
+  // 🧩 Modal
   // ===============================
   var eventModalElement = document.getElementById("eventModal");
-  if (!eventModalElement) {
-    console.error("❌ ERROR: No se encontró el modal en el DOM.");
-    return;
-  }
   var eventModal = new bootstrap.Modal(eventModalElement);
 
   function openModal(eventOrDate) {
-    let eventId = document.getElementById("eventId");
-    let eventTitle = document.getElementById("eventTitle");
-    let eventStart = document.getElementById("eventStart");
-    let eventColor = document.getElementById("eventColor");
-    let eventDescription = document.getElementById("eventDescription");
+    const eventId = document.getElementById("eventId");
+    const eventTitle = document.getElementById("eventTitle");
+    const eventStart = document.getElementById("eventStart");
+    const eventColor = document.getElementById("eventColor");
+    const eventDescription = document.getElementById("eventDescription");
 
-    // Limpiar valores previos
     eventId.value = "";
     eventTitle.value = "";
     eventStart.value = "";
@@ -138,14 +128,14 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".btn-secondary").addEventListener("click", closeModal);
 
   // ===============================
-  // 💾 Guardar evento (crear o editar)
+  // 💾 Guardar evento
   // ===============================
   document.getElementById("saveEvent").addEventListener("click", function () {
-    var id = document.getElementById("eventId").value;
-    var title = document.getElementById("eventTitle").value.trim();
-    var start = document.getElementById("eventStart").value;
-    var color = document.getElementById("eventColor").value;
-    var description = document.getElementById("eventDescription").value.trim();
+    const id = document.getElementById("eventId").value;
+    const title = document.getElementById("eventTitle").value.trim();
+    const start = document.getElementById("eventStart").value;
+    const color = document.getElementById("eventColor").value;
+    const description = document.getElementById("eventDescription").value.trim();
 
     if (!title || !start) {
       Swal.fire("Error", "Debes completar el título y la fecha del evento", "error");
@@ -156,38 +146,68 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ id, title, start, color, description })
+      body: JSON.stringify({ id, title, start, color, description }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (response.status === 401 || response.status === 403) {
+          Swal.fire({
+            icon: "error",
+            title: "Sesión expirada",
+            text: "Por favor, inicia sesión nuevamente.",
+          }).then(() => {
+            localStorage.removeItem("token");
+            window.top.location.href = "/";
+          });
+          return;
+        }
+
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
         closeModal();
+      })
+      .catch((err) => {
+        console.error("Error al guardar evento:", err);
+        Swal.fire("Error", "No se pudo conectar con el servidor", "error");
       });
   });
 
   // ===============================
-  // ✏️ Actualizar evento (drag & drop)
+  // ✏️ Actualizar evento (drag)
   // ===============================
   function updateEvent(event) {
     fetch(`${API_BASE_URL}/api/eventos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         id: event.id,
         title: event.title,
         start: event.start.toISOString().split("T")[0],
         color: event.backgroundColor,
-        description: event.extendedProps.description || ""
-      })
+        description: event.extendedProps.description || "",
+      }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (response.status === 401 || response.status === 403) {
+          Swal.fire({
+            icon: "error",
+            title: "Sesión expirada",
+            text: "Por favor, inicia sesión nuevamente.",
+          }).then(() => {
+            localStorage.removeItem("token");
+            window.top.location.href = "/";
+          });
+          return;
+        }
+
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
       });
@@ -199,15 +219,29 @@ document.addEventListener("DOMContentLoaded", function () {
   function deleteEvent(eventId) {
     fetch(`${API_BASE_URL}/api/eventos/${eventId}`, {
       method: "DELETE",
-      headers: { "Authorization": `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (response.status === 401 || response.status === 403) {
+          Swal.fire({
+            icon: "error",
+            title: "Sesión expirada",
+            text: "Por favor, inicia sesión nuevamente.",
+          }).then(() => {
+            localStorage.removeItem("token");
+            window.top.location.href = "/";
+          });
+          return;
+        }
+
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
       });
   }
 });
+
 
 
 

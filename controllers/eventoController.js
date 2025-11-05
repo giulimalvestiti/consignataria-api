@@ -4,7 +4,7 @@ exports.obtenerEventos = (req, res) => {
   mySQL.conexion.query("SELECT * FROM eventos", (err, results) => {
     if (err) {
       console.error("Error al obtener eventos:", err);
-      return res.status(500).json({ error: "Error al obtener eventos" });
+      return res.status(500).json({ status: false, msg: "Error al obtener eventos" });
     }
     res.json(results);
   });
@@ -12,36 +12,41 @@ exports.obtenerEventos = (req, res) => {
 
 exports.guardarEvento = (req, res) => {
   const { id, title, start, color, description } = req.body;
-  
-  // Validar campos obligatorios
+
   if (!title || !start) {
-    return res.status(400).json({ error: "El título y la fecha son obligatorios", status: false });
+    return res
+      .status(400)
+      .json({ status: false, msg: "El título y la fecha son obligatorios" });
   }
-  
+
   if (id) {
-    // Actualizar evento existente
+    // 🔹 Actualizar evento existente
     mySQL.conexion.query(
       "UPDATE eventos SET title=?, start=?, color=?, description=? WHERE id=?",
       [title, start, color, description, id],
       (err) => {
         if (err) {
           console.error("Error al actualizar el evento:", err);
-          return res.status(500).json({ error: "Error al actualizar el evento" });
+          return res
+            .status(500)
+            .json({ status: false, msg: "Error al actualizar el evento" });
         }
-        res.json({ msg: "Evento actualizado", status: true });
+        res.json({ status: true, msg: "Evento actualizado correctamente" });
       }
     );
   } else {
-    // Insertar nuevo evento
+    // 🔹 Crear nuevo evento
     mySQL.conexion.query(
       "INSERT INTO eventos (title, start, color, description) VALUES (?, ?, ?, ?)",
       [title, start, color, description || ""],
       (err) => {
         if (err) {
           console.error("Error al guardar el evento:", err);
-          return res.status(500).json({ error: "Error al guardar el evento" });
+          return res
+            .status(500)
+            .json({ status: false, msg: "Error al guardar el evento" });
         }
-        res.json({ msg: "Evento guardado", status: true });
+        res.json({ status: true, msg: "Evento guardado correctamente" });
       }
     );
   }
@@ -49,16 +54,20 @@ exports.guardarEvento = (req, res) => {
 
 exports.eliminarEvento = (req, res) => {
   const { id } = req.params;
-  
+
   if (!id) {
-    return res.status(400).json({ error: "ID del evento no proporcionado", status: false });
+    return res
+      .status(400)
+      .json({ status: false, msg: "ID del evento no proporcionado" });
   }
-  
+
   mySQL.conexion.query("DELETE FROM eventos WHERE id = ?", [id], (err) => {
     if (err) {
       console.error("Error al eliminar el evento:", err);
-      return res.status(500).json({ error: "Error al eliminar el evento" });
+      return res
+        .status(500)
+        .json({ status: false, msg: "Error al eliminar el evento" });
     }
-    res.json({ msg: "Evento eliminado", status: true });
+    res.json({ status: true, msg: "Evento eliminado correctamente" });
   });
 };
