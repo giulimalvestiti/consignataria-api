@@ -11,11 +11,14 @@ const app = express(); //creo una isntancia de express
 // Middlewares globales
 app.use(cors({
   origin: [
-    "http://localhost:3001",  // para desarrollo local
-    "https://consignataria-front.onrender.com" // dominio del front en Render
+    "http://localhost:3001", 
+    "https://consignataria-front.onrender.com"
   ],
-  credentials: true
-})); //permite que el servidor reciba solicitudes de otros orígenes.
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'] // Permite cabeceras adicionales
+}));
+ //permite que el servidor reciba solicitudes de otros orígenes.
 app.use(express.json()); //transforma una peticion entrante JSON en un objeto JS accesible
 app.use(cookieParser()); //permite leer y trabajar con las cookies
 
