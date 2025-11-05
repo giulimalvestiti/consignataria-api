@@ -8,18 +8,30 @@ dotenv.config();
 
 const app = express(); //creo una isntancia de express
 
+const allowedOrigins = [
+  "https://consignataria-front.onrender.com", // Tu frontend en Render
+  "http://localhost:3001" // Entorno local de desarrollo
+];
+
 // Middlewares globales
 app.use(cors({
-  origin: [
-    "http://localhost:3001", 
-    "https://consignataria-front.onrender.com",
-    "*"
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'] // Permite cabeceras adicionales
-}));
- //permite que el servidor reciba solicitudes de otros orígenes.
+  origin: function (origin, callback) {
+    // Permitir sin Origin (por ejemplo, Postman o llamadas locales)
+    if (!origin) return callback(null, true);
+
+    // Verifica si el origen está en la lista
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("No permitido por CORS: " + origin), false);
+    }
+  },
+  credentials: true, // Permite el uso de cookies/token JWT
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));  //permite que el servidor reciba solicitudes de otros orígenes.
+
+
 app.use(express.json()); //transforma una peticion entrante JSON en un objeto JS accesible
 app.use(cookieParser()); //permite leer y trabajar con las cookies
 
