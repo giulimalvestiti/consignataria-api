@@ -1,7 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  const API_BASE_URL = "https://consignataria-api.onrender.com"; // ✅ tu backend en Render
+  // ===============================
+  // 🔐 Configuración principal
+  // ===============================
+  const API_BASE_URL = "https://consignataria-api.onrender.com";
+  const token = localStorage.getItem("token");
 
+  if (!token) {
+    Swal.fire({
+      icon: "error",
+      title: "Sesión expirada",
+      text: "Por favor, inicia sesión nuevamente.",
+    }).then(() => {
+      window.top.location.href = "/"; // redirige al login
+    });
+    return;
+  }
+
+  // ===============================
+  // 🗓️ Inicializar calendario
+  // ===============================
   var calendarEl = document.getElementById("calendar");
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
@@ -15,11 +33,25 @@ document.addEventListener("DOMContentLoaded", function () {
       day: "Día",
       list: "Lista"
     },
-    // 🔹 CAMBIO: eventos desde tu backend Render
-    events: `${API_BASE_URL}/api/eventos`,
+
+    // ✅ Ahora los eventos se cargan con autorización
+    events: async function(fetchInfo, successCallback, failureCallback) {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/eventos`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        successCallback(data);
+      } catch (error) {
+        console.error("Error al cargar eventos:", error);
+        failureCallback(error);
+      }
+    },
+
     dateClick: function (info) {
       openModal(info.dateStr);
     },
+
     eventClick: function (info) {
       Swal.fire({
         title: "Opciones del Evento",
@@ -41,9 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     },
+
     eventDrop: function (info) {
       updateEvent(info.event);
     },
+
     datesSet: function (info) {
       let headerTitle = document.querySelector(".fc-toolbar-title");
       if (headerTitle) {
@@ -55,7 +89,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   calendar.render();
 
-  // Inicializamos modal de eventos (Bootstrap)
+  // ===============================
+  // 🧩 Modal de eventos
+  // ===============================
   var eventModalElement = document.getElementById("eventModal");
   if (!eventModalElement) {
     console.error("❌ ERROR: No se encontró el modal en el DOM.");
@@ -79,7 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (typeof eventOrDate === "string") {
       eventStart.value = eventOrDate;
-      eventColor.value = "#000000";
     } else {
       eventId.value = eventOrDate.id;
       eventTitle.value = eventOrDate.title;
@@ -92,11 +127,9 @@ document.addEventListener("DOMContentLoaded", function () {
     eventModal.show();
   }
 
-  document
-    .getElementById("eventColor")
-    .addEventListener("input", function () {
-      this.style.backgroundColor = this.value;
-    });
+  document.getElementById("eventColor").addEventListener("input", function () {
+    this.style.backgroundColor = this.value;
+  });
 
   function closeModal() {
     eventModal.hide();
@@ -104,7 +137,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelector(".btn-secondary").addEventListener("click", closeModal);
 
-  // ✅ Guardar evento en la BD (crear o editar)
+  // ===============================
+  // 💾 Guardar evento (crear o editar)
+  // ===============================
   document.getElementById("saveEvent").addEventListener("click", function () {
     var id = document.getElementById("eventId").value;
     var title = document.getElementById("eventTitle").value.trim();
@@ -117,10 +152,12 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // 🔹 CAMBIO: usa API Render
     fetch(`${API_BASE_URL}/api/eventos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify({ id, title, start, color, description })
     })
       .then(response => response.json())
@@ -131,11 +168,16 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // ✅ Actualizar evento al moverlo en el calendario
+  // ===============================
+  // ✏️ Actualizar evento (drag & drop)
+  // ===============================
   function updateEvent(event) {
     fetch(`${API_BASE_URL}/api/eventos`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
       body: JSON.stringify({
         id: event.id,
         title: event.title,
@@ -151,10 +193,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // ✅ Eliminar evento
+  // ===============================
+  // 🗑️ Eliminar evento
+  // ===============================
   function deleteEvent(eventId) {
     fetch(`${API_BASE_URL}/api/eventos/${eventId}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
     })
       .then(response => response.json())
       .then(data => {
@@ -163,6 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 });
+
 
 
 
