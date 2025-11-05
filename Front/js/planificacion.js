@@ -1,25 +1,54 @@
-document.addEventListener("DOMContentLoaded", function () {
-
+document.addEventListener("DOMContentLoaded", async function () {
+  // ===============================
+  // 🔐 Configuración principal
+  // ===============================
   const API_BASE_URL = "https://consignataria-api.onrender.com";
+  const FRONT_URL = "https://consignataria-front.onrender.com";
   const token = localStorage.getItem("token");
 
-  // ✅ Verificar token al cargar
+  // ===============================
+  // 🔒 Verificar token en el cliente
+  // ===============================
   if (!token) {
     Swal.fire({
       icon: "error",
       title: "Sesión expirada",
       text: "Por favor, inicia sesión nuevamente.",
     }).then(() => {
-      window.top.location.href = "/";
+      window.top.location.href = `${FRONT_URL}/views/login.html`;
     });
     return;
   }
 
   // ===============================
+  // 🔎 Verificar token en el servidor
+  // ===============================
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/verificar-token`, {
+      headers: { "Authorization": `Bearer ${token}` },
+    });
+
+    if (res.status === 401) {
+      Swal.fire({
+        icon: "error",
+        title: "Sesión expirada",
+        text: "Por favor, inicia sesión nuevamente.",
+      }).then(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("rol");
+        window.top.location.href = `${FRONT_URL}/views/login.html`;
+      });
+      return;
+    }
+  } catch (err) {
+    console.warn("⚠️ No se pudo verificar el token (Render puede estar en frío).", err);
+  }
+
+  // ===============================
   // 🗓️ Inicializar calendario
   // ===============================
-  var calendarEl = document.getElementById("calendar");
-  var calendar = new FullCalendar.Calendar(calendarEl, {
+  const calendarEl = document.getElementById("calendar");
+  const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     editable: true,
     displayEventTime: false,
@@ -29,8 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
       month: "Mes",
       week: "Semana",
       day: "Día",
-      list: "Lista"
+      list: "Lista",
     },
+
+    // ✅ Cargar eventos desde API
     events: async function (fetchInfo, successCallback, failureCallback) {
       try {
         const res = await fetch(`${API_BASE_URL}/api/eventos`, {
@@ -44,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             text: "Por favor, inicia sesión nuevamente.",
           }).then(() => {
             localStorage.removeItem("token");
-            window.top.location.href = "/";
+            window.top.location.href = `${FRONT_URL}/views/login.html`;
           });
           return;
         }
@@ -56,9 +87,11 @@ document.addEventListener("DOMContentLoaded", function () {
         failureCallback(error);
       }
     },
+
     dateClick: function (info) {
       openModal(info.dateStr);
     },
+
     eventClick: function (info) {
       Swal.fire({
         title: "Opciones del Evento",
@@ -77,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     },
+
     eventDrop: function (info) {
       updateEvent(info.event);
     },
@@ -85,10 +119,10 @@ document.addEventListener("DOMContentLoaded", function () {
   calendar.render();
 
   // ===============================
-  // 🧩 Modal
+  // 🧩 Modal de eventos
   // ===============================
-  var eventModalElement = document.getElementById("eventModal");
-  var eventModal = new bootstrap.Modal(eventModalElement);
+  const eventModalElement = document.getElementById("eventModal");
+  const eventModal = new bootstrap.Modal(eventModalElement);
 
   function openModal(eventOrDate) {
     const eventId = document.getElementById("eventId");
@@ -128,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".btn-secondary").addEventListener("click", closeModal);
 
   // ===============================
-  // 💾 Guardar evento
+  // 💾 Guardar evento (crear o editar)
   // ===============================
   document.getElementById("saveEvent").addEventListener("click", function () {
     const id = document.getElementById("eventId").value;
@@ -151,19 +185,8 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify({ id, title, start, color, description }),
     })
       .then(async (response) => {
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
         const data = await response.json();
-
-        if (response.status === 401 || response.status === 403) {
-          Swal.fire({
-            icon: "error",
-            title: "Sesión expirada",
-            text: "Por favor, inicia sesión nuevamente.",
-          }).then(() => {
-            localStorage.removeItem("token");
-            window.top.location.href = "/";
-          });
-          return;
-        }
 
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
@@ -176,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ===============================
-  // ✏️ Actualizar evento (drag)
+  // ✏️ Actualizar evento (drag & drop)
   // ===============================
   function updateEvent(event) {
     fetch(`${API_BASE_URL}/api/eventos`, {
@@ -194,22 +217,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }),
     })
       .then(async (response) => {
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
         const data = await response.json();
-
-        if (response.status === 401 || response.status === 403) {
-          Swal.fire({
-            icon: "error",
-            title: "Sesión expirada",
-            text: "Por favor, inicia sesión nuevamente.",
-          }).then(() => {
-            localStorage.removeItem("token");
-            window.top.location.href = "/";
-          });
-          return;
-        }
 
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
+      })
+      .catch((err) => {
+        console.error("Error al actualizar evento:", err);
+        Swal.fire("Error", "No se pudo actualizar el evento", "error");
       });
   }
 
@@ -222,22 +238,15 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async (response) => {
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
         const data = await response.json();
-
-        if (response.status === 401 || response.status === 403) {
-          Swal.fire({
-            icon: "error",
-            title: "Sesión expirada",
-            text: "Por favor, inicia sesión nuevamente.",
-          }).then(() => {
-            localStorage.removeItem("token");
-            window.top.location.href = "/";
-          });
-          return;
-        }
 
         Swal.fire(data.msg, "", data.status ? "success" : "error");
         calendar.refetchEvents();
+      })
+      .catch((err) => {
+        console.error("Error al eliminar evento:", err);
+        Swal.fire("Error", "No se pudo eliminar el evento", "error");
       });
   }
 });
