@@ -12,7 +12,8 @@ const app = express(); //creo una isntancia de express
 app.use(cors({
   origin: [
     "http://localhost:3001", 
-    "https://consignataria-front.onrender.com"
+    "https://consignataria-front.onrender.com",
+    "*"
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
