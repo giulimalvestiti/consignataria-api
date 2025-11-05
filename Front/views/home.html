@@ -1,57 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inicio</title>
-        <link rel="stylesheet" href="/css/estilos_home.css">
-    </head>
-    
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+
+    <!-- ✅ CSS principal -->
+    <link rel="stylesheet" href="/css/estilos_home.css">
+</head>
+
 <body>
     <header class="header">
         <div class="logo">
-<!---->            <img src="/img/logo_sin_letras.png" alt="Logo de la marca">
+            <img src="/img/logo_sin_letras.png" alt="Logo de la marca">
         </div>
+
+        <!-- 🧭 Menú principal -->
         <nav>
-           <ul class="nav-links">
-                <li><a href="https://consignataria-front.onrender.com/views/dashboard.html" target="paginas">Dashboard</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/planificacion.html" target="paginas">Planificación</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/abmCargasGordos.html" target="paginas">Cargas Faena</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/abmCargasInvernadas.html" target="paginas">Cargas Invernadas</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/abmProductores.html" target="paginas">Productores</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/abmMatarifes.html" target="paginas">Matarifes</a></li>
-                <li><a href="https://consignataria-front.onrender.com/views/abmTransportes.html" target="paginas">Transportes</a></li>
-                <li id="menuUsuarios" class="oculto"><a href="https://consignataria-front.onrender.com/views/abmRegister.html" target="paginas">Usuarios</a></li>
-           </ul>            
+            <ul class="nav-links">
+                <li><a href="/views/dashboard.html" target="paginas">Dashboard</a></li>
+                <li><a href="/views/planificacion.html" target="paginas">Planificación</a></li>
+                <li><a href="/views/abmCargasGordos.html" target="paginas">Cargas Faena</a></li>
+                <li><a href="/views/abmCargasInvernadas.html" target="paginas">Cargas Invernadas</a></li>
+                <li><a href="/views/abmProductores.html" target="paginas">Productores</a></li>
+                <li><a href="/views/abmMatarifes.html" target="paginas">Matarifes</a></li>
+                <li><a href="/views/abmTransportes.html" target="paginas">Transportes</a></li>
+                <li id="menuUsuarios" class="oculto">
+                    <a href="/views/abmRegister.html" target="paginas">Usuarios</a>
+                </li>
+            </ul>
         </nav>
-        <a class="btn" href="#" onclick="logout()"><button>Cerrar Sesión</button></a>
 
-<!---->        <a onclick="openNav()" class="menu" href="#"><button>Menu</button></a>
+        <!-- 🚪 Botón de logout -->
+        <a class="btn" href="#" onclick="logout()">
+            <button>Cerrar Sesión</button>
+        </a>
 
-<!---->        <div id="mobile-menu" class="overlay">
-<!---->            <a onclick="closeNav(); return false;" href="#" class="close">&times;</a>
-<!---->            <div class="overlay-content">
-<!---->                <a href="https://consignataria-front.onrender.com/views/dashboard.html" target="paginas">Dashboard</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/planificacion.html" target="paginas">Planificación</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/abmCargasGordos.html" target="paginas">Cargas Faena</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/abmCargasInvernadas.html" target="paginas">Cargas Invernadas</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/abmProductores.html" target="paginas">Productores</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/abmMatarifes.html" target="paginas">Matarifes</a>
-<!---->                <a href="https://consignataria-front.onrender.com/views/abmTransportes.html" target="paginas">Transportes</a>   
-<!---->               <a id="mobileMenuUsuarios" class="oculto" href="https://consignataria-front.onrender.com/views/abmRegister.html" target="paginas">Usuarios</a>                  
-          <a class="btn" href="#" onclick="logout()"><button>Cerrar Sesión</button></a>   
-<!---->            </div>
-<!---->        </div>
+        <!-- 📱 Menú móvil -->
+        <a onclick="openNav()" class="menu" href="#"><button>Menu</button></a>
+
+        <div id="mobile-menu" class="overlay">
+            <a onclick="closeNav(); return false;" href="#" class="close">&times;</a>
+
+            <div class="overlay-content">
+                <a href="/views/dashboard.html" target="paginas">Dashboard</a>
+                <a href="/views/planificacion.html" target="paginas">Planificación</a>
+                <a href="/views/abmCargasGordos.html" target="paginas">Cargas Faena</a>
+                <a href="/views/abmCargasInvernadas.html" target="paginas">Cargas Invernadas</a>
+                <a href="/views/abmProductores.html" target="paginas">Productores</a>
+                <a href="/views/abmMatarifes.html" target="paginas">Matarifes</a>
+                <a href="/views/abmTransportes.html" target="paginas">Transportes</a>
+                <a id="mobileMenuUsuarios" class="oculto" href="/views/abmRegister.html" target="paginas">Usuarios</a>
+
+                <!-- Botón cerrar sesión móvil -->
+                <a class="btn" href="#" onclick="logout()"><button>Cerrar Sesión</button></a>
+            </div>
+        </div>
     </header>
-<main>
-    <iframe id="contenido" name="paginas" src="" frameborder="0"></iframe>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="/js/misScripts_home.js"></script>
 
+    <!-- 🪟 Contenedor principal con iframe -->
+    <main>
+        <iframe id="contenido" name="paginas" src="/views/dashboard.html" frameborder="0"></iframe>
+    </main>
+
+    <!-- 🔔 Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="/js/misScripts_home.js"></script>
 </body>
 </html>
