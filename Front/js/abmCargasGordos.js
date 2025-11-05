@@ -3,6 +3,37 @@ document.addEventListener("DOMContentLoaded", async function () {
   let opcion = null;
   let tablaCargas;
   let idCargaEnEdicion = null;
+  
+  // Leer token y validar sesión
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    Swal.fire({
+      icon: "error",
+      title: "Sesión expirada",
+      text: "Por favor, inicia sesión nuevamente.",
+    }).then(() => {
+      window.location.href = "/";
+    });
+    return;
+  }
+
+  // Función genérica para manejar expiración de token
+  async function manejarExpiracion(res) {
+    if (res.status === 401 || res.status === 403) {
+      await Swal.fire({
+        icon: "error",
+        title: "Sesión expirada",
+        text: "Tu sesión ha caducado. Inicia sesión nuevamente.",
+      });
+      localStorage.removeItem("token");
+      localStorage.removeItem("rol");
+      window.location.href = "/";
+      throw new Error("Token inválido o expirado");
+    }
+  }
+
+
 
   // ------------------------------------------------------------------------
   // FECHAS: FAENA >= CARGA
@@ -82,8 +113,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function cargarProductores() {
     try {
       const response = await fetch("https://consignataria-api.onrender.com/api/productores", {
-        credentials: "include",
-      });
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+  },
+});
+await manejarExpiracion(response);
+
       const productores = await response.json();
       const select = document.getElementById("productor");
       select.innerHTML = "<option value=''>Seleccione un Productor</option>";
@@ -98,8 +134,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   async function cargarMatarifes() {
     try {
       const response = await fetch("https://consignataria-api.onrender.com/api/matarifes", {
-        credentials: "include",
-      });
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+  },
+});
+await manejarExpiracion(response);
+
       const matarifes = await response.json();
       const select = document.getElementById("matarife");
       select.innerHTML = "<option value=''>Seleccione un Matarife</option>";
@@ -113,9 +154,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Carga la lista de Transportes en el select del formulario
   async function cargarTransportes() {
     try {
-      const response = await fetch("https://consignataria-api.onrender.com/api/transportes", {
-        credentials: "include",
-      });
+      const res = await fetch(url, {
+  headers: {
+    "Authorization": `Bearer ${token}`,
+  },
+});
+await manejarExpiracion(res);
+
       const transportes = await response.json();
       const select = document.getElementById("transporte");
       select.innerHTML = "<option value=''>Seleccione un Transporte</option>";
@@ -396,10 +441,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const response = await fetch(endpoint, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(datos),
-        credentials: "include",
       });
+      await manejarExpiracion(response);
+
 
       const resultado = await response.text();
       console.log("Respuesta del servidor:", resultado);
@@ -507,8 +556,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Vencimientos (edición)
         const respVencimientos = await fetch(
           `https://consignataria-api.onrender.com/api/vencimientos/${data.idCargaGordo}?tipo=gordo`,
-          { credentials: "include" }
+          {
+            headers: { "Authorization": `Bearer ${token}` },
+          }
         );
+        await manejarExpiracion(respVencimientos);
+
         const vencimientos = await respVencimientos.json();
 
         document.getElementById("cantidadVencimientos").value =
@@ -637,7 +690,12 @@ document.addEventListener("DOMContentLoaded", async function () {
           cancelButtonText: "Cancelar",
         }).then(async (result) => {
           if (result.isConfirmed) {
-            await fetch(url + data.idCargaGordo, { method: "DELETE",  credentials: "include", });
+            const resp = await fetch(url + data.idCargaGordo, {
+              method: "DELETE",
+              headers: { "Authorization": `Bearer ${token}` },
+            });
+            await manejarExpiracion(resp);
+
             await recargarTabla();
             Swal.fire("Eliminado", "La carga ha sido eliminada", "success");
           }
@@ -682,11 +740,15 @@ document.addEventListener("DOMContentLoaded", async function () {
           "https://consignataria-api.onrender.com/api/gordos/reporte-productor",
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
             body: JSON.stringify(datos),
-            credentials: "include",
           }
         );
+        await manejarExpiracion(response);
+
 
         if (!response.ok) throw new Error("No se pudo generar el reporte");
 
